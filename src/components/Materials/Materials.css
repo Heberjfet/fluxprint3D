@@ -1,0 +1,147 @@
+.materials {
+  background: var(--color-bg);
+  position: relative;
+}
+
+.materials::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.1), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.materials-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.material-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  transition: var(--transition-smooth);
+  opacity: 0;
+  transform: translateY(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.material-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at top, var(--material-color), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.material-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.material-card:hover {
+  border-color: var(--material-color);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.material-card:hover::before {
+  opacity: 0.15;
+}
+
+.material-badge {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.material-color {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: 0 0 20px currentColor;
+}
+
+.material-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+  position: relative;
+  z-index: 1;
+}
+
+.material-description {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+
+.materials-cta {
+  text-align: center;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 20px;
+  margin-top: 3rem;
+}
+
+.materials-cta p {
+  font-size: 1.3rem;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+}
+
+.btn-material {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-orange));
+  color: var(--color-bg);
+  font-weight: 600;
+  border-radius: 50px;
+  transition: var(--transition-smooth);
+}
+
+.btn-material:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+  .materials-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  .materials-cta p {
+    font-size: 1.1rem;
+  }
+}

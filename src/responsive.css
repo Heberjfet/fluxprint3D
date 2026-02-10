@@ -1,0 +1,452 @@
+/* ==============================================
+   RESPONSIVE DESIGN - MOBILE FIRST
+   ============================================== */
+
+/* Extra Small Devices (phones, menos de 576px) */
+@media (max-width: 575px) {
+  /* Global */
+  .container {
+    padding: 0 1rem;
+  }
+
+  .section {
+    padding: 4rem 0;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+  }
+
+  /* Hero */
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-content .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+  }
+
+  /* About */
+  .about-content {
+    flex-direction: column;
+  }
+
+  .about-text,
+  .about-stats {
+    width: 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Services */
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Clients */
+  .clients-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Materials */
+  .materials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Gallery */
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-filters {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .filter-btn {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+
+  /* Process */
+  .process-timeline {
+    gap: 2rem;
+  }
+
+  .process-step {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .step-number {
+    font-size: 3rem;
+  }
+
+  /* WhyUs */
+  .reasons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Contact */
+  .contact-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .contact-info {
+    order: 2;
+  }
+
+  .contact-form-wrapper {
+    order: 1;
+  }
+
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  /* Footer */
+  .footer-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .footer-social {
+    justify-content: center;
+  }
+}
+
+/* Small Devices (landscape phones, 576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+
+  .section {
+    padding: 5rem 0;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+  }
+
+  /* Hero */
+  .hero-content h1 {
+    font-size: 2.8rem;
+  }
+
+  /* Services */
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* Materials */
+  .materials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Gallery */
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* WhyUs */
+  .reasons-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Contact */
+  .info-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Medium Devices (tablets, 768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .container {
+    max-width: 720px;
+  }
+
+  .section {
+    padding: 6rem 0;
+  }
+
+  .section-title {
+    font-size: 3rem;
+  }
+
+  /* Navbar */
+  .navbar-menu {
+    gap: 1.5rem;
+  }
+
+  .navbar-menu a {
+    font-size: 0.9rem;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  /* Hero */
+  .hero-content h1 {
+    font-size: 3.5rem;
+  }
+
+  .hero-3d {
+    height: 400px;
+  }
+
+  /* About */
+  .about-content {
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .about-text,
+  .about-stats {
+    width: 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Services */
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Clients */
+  .clients-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Materials */
+  .materials-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Gallery */
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Process */
+  .process-step {
+    grid-template-columns: 100px 1fr;
+  }
+
+  /* WhyUs */
+  .reasons-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Contact */
+  .contact-content {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .info-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Large Devices (desktops, 992px - 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .container {
+    max-width: 960px;
+  }
+
+  /* Services */
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Materials */
+  .materials-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Gallery */
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* WhyUs */
+  .reasons-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Extra Large Devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1200px;
+  }
+
+  /* Hero */
+  .hero-content h1 {
+    font-size: 5rem;
+  }
+
+  .hero-3d {
+    height: 600px;
+  }
+
+  /* Services */
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Gallery */
+  .projects-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Ultra Wide Screens (1400px and up) */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+
+  .section {
+    padding: 10rem 0;
+  }
+
+  .section-title {
+    font-size: 4rem;
+  }
+
+  /* Hero */
+  .hero-content h1 {
+    font-size: 6rem;
+  }
+
+  .hero-3d {
+    height: 700px;
+  }
+}
+
+/* Landscape Orientation */
+@media (max-height: 600px) and (orientation: landscape) {
+  .section {
+    padding: 3rem 0;
+  }
+
+  .hero {
+    min-height: 100vh;
+  }
+
+  .hero-3d {
+    height: 300px;
+  }
+
+  .navbar-menu.active {
+    height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+/* High DPI Screens (Retina) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Ajustes para pantallas de alta densidad */
+  .service-icon svg,
+  .client-icon svg,
+  .process-icon svg {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Touch Devices */
+@media (hover: none) and (pointer: coarse) {
+  /* Botones más grandes para touch */
+  .btn {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  .filter-btn {
+    min-height: 44px;
+  }
+
+  .mobile-menu-btn {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Remover hover effects en touch */
+  .service-card:hover,
+  .project-card:hover,
+  .client-card:hover {
+    transform: none;
+  }
+
+  /* Animaciones más suaves en touch */
+  * {
+    transition-duration: 0.2s !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .navbar,
+  .mobile-menu-btn,
+  .hero-buttons,
+  .contact-form,
+  .page-loader {
+    display: none !important;
+  }
+
+  .section {
+    page-break-inside: avoid;
+    padding: 2rem 0;
+  }
+
+  body {
+    color: #000;
+    background: #fff;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark Mode Support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  /* Ya está en dark mode por defecto */
+}

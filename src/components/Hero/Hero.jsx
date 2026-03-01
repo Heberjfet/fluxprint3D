@@ -1,10 +1,13 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, Suspense, lazy } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei'
 import './Hero.css'
 
-// Componente 3D de la impresora
-function Printer3D() {
+// Lazy load the 3D printer component
+const Printer3DLazy = lazy(() => import('./Printer3DLazy'))
+
+// Simplified 3D printer for faster loading
+function SimplePrinter3D() {
   const meshRef = useRef()
   
   useFrame((state) => {
@@ -16,38 +19,30 @@ function Printer3D() {
 
   return (
     <group ref={meshRef}>
-      {/* Base de la impresora */}
+      {/* Simplified version for fallback */}
       <mesh position={[0, -1, 0]}>
         <boxGeometry args={[3, 0.3, 3]} />
-        <meshStandardMaterial color="#1a1a1a" metalness={0.8} roughness={0.2} />
+        <meshStandardMaterial color="#1a1a1a" />
       </mesh>
-      
-      {/* Columnas */}
-      <mesh position={[-1.3, 0, -1.3]}>
-        <cylinderGeometry args={[0.05, 0.05, 2.5, 16]} />
-        <meshStandardMaterial color="#333333" metalness={0.9} roughness={0.1} />
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#00d4ff" />
       </mesh>
-      <mesh position={[1.3, 0, -1.3]}>
-        <cylinderGeometry args={[0.05, 0.05, 2.5, 16]} />
-        <meshStandardMaterial color="#333333" metalness={0.9} roughness={0.1} />
-      </mesh>
-      <mesh position={[-1.3, 0, 1.3]}>
-        <cylinderGeometry args={[0.05, 0.05, 2.5, 16]} />
-        <meshStandardMaterial color="#333333" metalness={0.9} roughness={0.1} />
-      </mesh>
-      <mesh position={[1.3, 0, 1.3]}>
-        <cylinderGeometry args={[0.05, 0.05, 2.5, 16]} />
-        <meshStandardMaterial color="#333333" metalness={0.9} roughness={0.1} />
-      </mesh>
-      
-      {/* Plataforma de impresión */}
-      <mesh position={[0, -0.5, 0]}>
-        <boxGeometry args={[2.5, 0.1, 2.5]} />
-        <meshStandardMaterial color="#00d4ff" metalness={0.5} roughness={0.3} emissive="#00d4ff" emissiveIntensity={0.2} />
-      </mesh>
-      
-      {/* Extrusor */}
-      <mesh position={[0, 0.5, 0]}>
+    </group>
+  )
+}
+
+// Loading fallback
+function CanvasLoader() {
+  return (
+    <div className="canvas-loader">
+      <div className="loader-content">
+        <div className="loader-spinner"></div>
+        <p>Cargando modelo 3D...</p>
+      </div>
+    </div>
+  )
+}
         <boxGeometry args={[0.4, 0.4, 0.4]} />
         <meshStandardMaterial color="#ff6b35" metalness={0.7} roughness={0.2} emissive="#ff6b35" emissiveIntensity={0.3} />
       </mesh>
@@ -84,7 +79,11 @@ function Hero() {
   return (
     <section className="hero" id="inicio">
       <div className="hero-background" style={{ transform: `translateY(${parallaxOffset}px)` }}>
-        <Canvas>
+        <Canvas
+          performance={{ min: 0.8, max: 1.0 }}
+          dpr={[1, 2]}
+          gl={{ antialias: true, alpha: true }}
+        >
           <PerspectiveCamera makeDefault position={[5, 2, 5]} fov={50} />
           <OrbitControls 
             enableZoom={false} 
@@ -100,7 +99,9 @@ function Hero() {
           <pointLight position={[-10, -10, -5]} intensity={0.5} color="#00d4ff" />
           <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={1} color="#ff6b35" />
           
-          <Printer3D />
+          <Suspense fallback={<SimplePrinter3D />}>
+            <Printer3DLazy />
+          </Suspense>
           
           <Environment preset="city" />
         </Canvas>
@@ -115,7 +116,7 @@ function Hero() {
           }}
         >
           <h1 className="hero-title fade-in-up">
-            jafet<span className="highlight">FC</span>
+            fluxprint<span className="highlight">3D</span>
           </h1>
           <p className="hero-slogan fade-in-up" style={{ animationDelay: '0.2s' }}>
             Impresión 3D profesional para ideas sin límites

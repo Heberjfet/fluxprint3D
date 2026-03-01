@@ -9,7 +9,7 @@ function Footer() {
         <div className="footer-content">
           <div className="footer-brand">
             <h3 className="footer-logo">
-              jafet<span className="highlight">FC</span>
+              fluxprint<span className="highlight">3D</span>
             </h3>
             <p className="footer-tagline">
               Impresión 3D profesional para ideas sin límites
@@ -48,8 +48,8 @@ function Footer() {
               <h4>Contacto</h4>
               <ul>
                 <li><a href="#contacto">Cotizar Proyecto</a></li>
-                <li><a href="mailto:contacto@jafetfc.com">Email</a></li>
-                <li><a href="tel:+521234567890">Teléfono</a></li>
+                <li><a href="mailto:contacto@fluxprint3d.com">Email</a></li>
+                <li><a href="tel:+52551234567890">+52 (55) 1234-5678</a></li>
                 <li><a href="#">Ubicación</a></li>
               </ul>
             </div>
@@ -68,7 +68,7 @@ function Footer() {
         
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © {currentYear} jafetFC. Todos los derechos reservados.
+            © {currentYear} fluxprint3D. Todos los derechos reservados.
           </p>
           <p className="footer-credits">
             Hecho con 💙 y tecnología 3D

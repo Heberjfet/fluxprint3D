@@ -9,6 +9,7 @@ import Materials from './components/Materials/Materials'
 import Gallery from './components/Gallery/Gallery'
 import Process from './components/Process/Process'
 import WhyUs from './components/WhyUs/WhyUs'
+import Testimonials from './components/Testimonials/Testimonials'
 import Contact from './components/Contact/Contact'
 import Footer from './components/Footer/Footer'
 
@@ -26,6 +27,7 @@ function App() {
         <Gallery />
         <Process />
         <WhyUs />
+        <Testimonials />
         <Contact />
         <Footer />
       </div>

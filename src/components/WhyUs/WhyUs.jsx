@@ -105,7 +105,7 @@ function WhyUs() {
     <section className="why-us section" id="por-que" ref={sectionRef}>
       <div className="container">
         <div className="why-us-header">
-          <h2 className="section-title">¿Por qué elegir jafetFC?</h2>
+          <h2 className="section-title">¿Por qué elegir fluxprint3D?</h2>
           <p className="section-subtitle">
             Excelencia en cada detalle, compromiso en cada proyecto
           </p>

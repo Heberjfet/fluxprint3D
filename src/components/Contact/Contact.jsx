@@ -12,6 +12,10 @@ function Contact() {
     file: null
   })
 
+  const [formErrors, setFormErrors] = useState({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState('') // 'success', 'error', or ''
+
   useEffect(() => {
     const handleScroll = () => {
       const section = document.querySelector('.contact')
@@ -30,17 +34,126 @@ function Contact() {
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+    
+    // Clear error when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => ({ ...prev, [name]: '' }))
+    }
   }
 
   const handleFileChange = (e) => {
-    setFormData(prev => ({ ...prev, file: e.target.files[0] }))
+    const file = e.target.files[0]
+    if (file) {
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        setFormErrors(prev => ({ ...prev, file: 'El archivo no puede ser mayor a 10MB' }))
+        return
+      }
+      // Validate file type
+      const allowedTypes = ['.stl', '.obj', '.3mf', '.ply', '.x3d']
+      const fileExtension = '.' + file.name.split('.').pop().toLowerCase()
+      if (!allowedTypes.includes(fileExtension)) {
+        setFormErrors(prev => ({ ...prev, file: 'Formato de archivo no válido' }))
+        return
+      }
+    }
+    setFormData(prev => ({ ...prev, file }))
+    if (formErrors.file) {
+      setFormErrors(prev => ({ ...prev, file: '' }))
+    }
   }
 
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    const errors = {}
+
+    // Name validation
+    if (!formData.name.trim()) {
+      errors.name = 'El nombre es requerido'
+    } else if (formData.name.trim().length < 2) {
+      errors.name = 'El nombre debe tener al menos 2 caracteres'
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!formData.email.trim()) {
+      errors.email = 'El email es requerido'
+    } else if (!emailRegex.test(formData.email)) {
+      errors.email = 'Ingresa un email válido'
+    }
+
+    // Phone validation (optional but if provided should be valid)
+    if (formData.phone.trim()) {
+      const phoneRegex = /^[\+]?[\d\s\-\(\)]{10,}$/
+      if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
+        errors.phone = 'Ingresa un teléfono válido'
+      }
+    }
+
+    // Service validation
+    if (!formData.service) {
+      errors.service = 'Selecciona un servicio'
+    }
+
+    // Message validation
+    if (!formData.message.trim()) {
+      errors.message = 'La descripción del proyecto es requerida'
+    } else if (formData.message.trim().length < 10) {
+      errors.message = 'La descripción debe tener al menos 10 caracteres'
+    }
+
+    return errors
+  }
+
+  const simulateEmailSend = async (formData) => {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    // Simulate random success/failure (90% success rate)
+    if (Math.random() > 0.1) {
+      return { success: true, message: 'Cotización enviada exitosamente' }
+    } else {
+      throw new Error('Error del servidor. Por favor intenta nuevamente.')
+    }
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Aquí iría la lógica de envío del formulario
-    console.log('Form submitted:', formData)
-    alert('¡Gracias por tu interés! Te contactaremos pronto.')
+    
+    // Validate form
+    const errors = validateForm()
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors)
+      return
+    }
+
+    setIsSubmitting(true)
+    setSubmitStatus('')
+
+    try {
+      // Simulate sending email
+      await simulateEmailSend(formData)
+      
+      setSubmitStatus('success')
+      
+      // Reset form after successful submission
+      setTimeout(() => {
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: '',
+          message: '',
+          file: null
+        })
+        setSubmitStatus('')
+      }, 3000)
+
+    } catch (error) {
+      setSubmitStatus('error')
+      console.error('Error sending form:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -63,7 +176,7 @@ function Contact() {
                 </div>
                 <div className="info-text">
                   <h4>Email</h4>
-                  <p>contacto@jafetfc.com</p>
+                  <p>contacto@fluxprint3d.com</p>
                 </div>
               </div>
               
@@ -75,7 +188,7 @@ function Contact() {
                 </div>
                 <div className="info-text">
                   <h4>Teléfono</h4>
-                  <p>+52 123 456 7890</p>
+                  <p>+52 (55) 1234-5678</p>
                 </div>
               </div>
               
@@ -88,7 +201,7 @@ function Contact() {
                 </div>
                 <div className="info-text">
                   <h4>Ubicación</h4>
-                  <p>Ciudad de México, México</p>
+                  <p>Benito Juárez, CDMX, México</p>
                 </div>
               </div>
               
@@ -101,7 +214,7 @@ function Contact() {
                 </div>
                 <div className="info-text">
                   <h4>Horario</h4>
-                  <p>Lun - Vie: 9:00 - 18:00</p>
+                  <p>Lun - Vie: 9:00 - 19:00<br/>Sáb: 10:00 - 15:00</p>
                 </div>
               </div>
             </div>
@@ -135,9 +248,20 @@ function Contact() {
           </div>
           
           <div className="contact-form-wrapper" style={{ transform: `translateY(${parallaxY * 0.7}px)` }}>
+            {submitStatus === 'success' && (
+              <div className="submit-feedback success">
+                ✅ ¡Gracias! Hemos recibido tu cotización. Te contactaremos pronto.
+              </div>
+            )}
+            {submitStatus === 'error' && (
+              <div className="submit-feedback error">
+                ❌ Hubo un error al enviar tu cotización. Por favor intenta nuevamente.
+              </div>
+            )}
+            
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="name">Nombre completo</label>
+                <label htmlFor="name">Nombre completo *</label>
                 <input
                   type="text"
                   id="name"
@@ -146,11 +270,13 @@ function Contact() {
                   onChange={handleChange}
                   required
                   placeholder="Tu nombre"
+                  className={formErrors.name ? 'error' : ''}
                 />
+                {formErrors.name && <span className="error-text">{formErrors.name}</span>}
               </div>
               
               <div className="form-group">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">Email *</label>
                 <input
                   type="email"
                   id="email"
@@ -159,7 +285,9 @@ function Contact() {
                   onChange={handleChange}
                   required
                   placeholder="tu@email.com"
+                  className={formErrors.email ? 'error' : ''}
                 />
+                {formErrors.email && <span className="error-text">{formErrors.email}</span>}
               </div>
               
               <div className="form-group">
@@ -170,31 +298,35 @@ function Contact() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+52 123 456 7890"
+                  placeholder="+52 (55) 1234-5678"
+                  className={formErrors.phone ? 'error' : ''}
                 />
+                {formErrors.phone && <span className="error-text">{formErrors.phone}</span>}
               </div>
               
               <div className="form-group">
-                <label htmlFor="service">Servicio de interés</label>
+                <label htmlFor="service">Servicio de interés *</label>
                 <select
                   id="service"
                   name="service"
                   value={formData.service}
                   onChange={handleChange}
                   required
+                  className={formErrors.service ? 'error' : ''}
                 >
                   <option value="">Selecciona un servicio</option>
                   <option value="fdm">Impresión 3D FDM</option>
-                  <option value="resina">Impresión en Resina</option>
+                  <option value="resina">Impresión en Resina SLA</option>
                   <option value="prototipo">Prototipado Rápido</option>
-                  <option value="diseño">Diseño 3D</option>
+                  <option value="diseño">Diseño 3D Personalizado</option>
                   <option value="serie">Producción en Serie</option>
-                  <option value="personalizado">Personalización</option>
+                  <option value="personalizado">Proyecto Personalizado</option>
                 </select>
+                {formErrors.service && <span className="error-text">{formErrors.service}</span>}
               </div>
               
               <div className="form-group full-width">
-                <label htmlFor="message">Descripción del proyecto</label>
+                <label htmlFor="message">Descripción del proyecto *</label>
                 <textarea
                   id="message"
                   name="message"
@@ -202,29 +334,51 @@ function Contact() {
                   onChange={handleChange}
                   required
                   rows="4"
-                  placeholder="Cuéntanos sobre tu proyecto..."
+                  placeholder="Describe tu proyecto: dimensiones, materiales preferidos, cantidad, plazo de entrega, etc."
+                  className={formErrors.message ? 'error' : ''}
                 ></textarea>
+                {formErrors.message && <span className="error-text">{formErrors.message}</span>}
+                <small className="form-help">Mínimo 10 caracteres</small>
               </div>
               
               <div className="form-group full-width">
                 <label htmlFor="file" className="file-label">
                   <span className="file-icon">📎</span>
-                  <span>{formData.file ? formData.file.name : 'Adjuntar archivo STL (opcional)'}</span>
+                  <span>{formData.file ? formData.file.name : 'Adjuntar archivo 3D (opcional)'}</span>
+                  <small>STL, OBJ, 3MF, PLY, X3D - Máx. 10MB</small>
                 </label>
                 <input
                   type="file"
                   id="file"
                   name="file"
                   onChange={handleFileChange}
-                  accept=".stl,.obj,.3mf"
+                  accept=".stl,.obj,.3mf,.ply,.x3d"
                   className="file-input"
                 />
+                {formErrors.file && <span className="error-text">{formErrors.file}</span>}
               </div>
               
-              <button type="submit" className="submit-btn">
-                Enviar cotización
-                <span className="btn-arrow">→</span>
+              <button 
+                type="submit" 
+                className={`submit-btn ${isSubmitting ? 'submitting' : ''}`}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="spinner"></span>
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    Enviar cotización
+                    <span className="btn-arrow">→</span>
+                  </>
+                )}
               </button>
+              
+              <p className="form-privacy">
+                * Campos requeridos. Tu información está protegida y solo será usada para contactarte sobre tu proyecto.
+              </p>
             </form>
           </div>
         </div>

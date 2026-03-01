@@ -52,7 +52,7 @@ function PageLoader() {
               style={{ '--progress': progress }}
             />
             <text x="50" y="58" textAnchor="middle" className="logo-text">
-              jafetFC
+              fluxprint3D
             </text>
           </svg>
         </div>

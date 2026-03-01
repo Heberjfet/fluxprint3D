@@ -30,7 +30,7 @@ function Navbar() {
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container container">
         <a href="#inicio" className="navbar-logo">
-          jafet<span className="logo-highlight">FC</span>
+          fluxprint<span className="logo-highlight">3D</span>
         </a>
         
         <ul className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>

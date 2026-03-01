@@ -51,7 +51,7 @@ function About() {
             </p>
             <div className="about-description">
               <p>
-                En <strong>jafetFC</strong>, somos pioneros en tecnología de impresión 3D, 
+                En <strong>fluxprint3D</strong>, somos pioneros en tecnología de impresión 3D, 
                 dedicados a materializar cada idea con precisión milimétrica y acabados 
                 profesionales de nivel industrial.
               </p>

@@ -165,6 +165,42 @@
   margin-top: 2rem;
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.carousel-arrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.carousel-arrow:hover {
+  background: rgba(0, 212, 255, 0.2);
+  border-color: var(--color-accent-blue);
+  transform: scale(1.1);
+}
+
+.carousel-arrow:active {
+  transform: scale(0.95);
+}
+
+.carousel-arrow:focus {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 2px;
+}
+
+.carousel-arrow svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-text);
 }
 
 .testimonial-dots {

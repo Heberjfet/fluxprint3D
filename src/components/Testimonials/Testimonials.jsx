@@ -77,10 +77,18 @@ function Testimonials() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonialsData.length)
-    }, 6000) // Change every 6 seconds
+    }, 6000)
 
     return () => clearInterval(interval)
   }, [])
+
+  const handlePrevClick = () => {
+    setCurrentTestimonial((prev) => (prev - 1 + testimonialsData.length) % testimonialsData.length)
+  }
+
+  const handleNextClick = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonialsData.length)
+  }
 
   const handleDotClick = (index) => {
     setCurrentTestimonial(index)
@@ -106,6 +114,8 @@ function Testimonials() {
               <div
                 key={testimonial.id}
                 className={`testimonial-card ${index === currentTestimonial ? 'active' : ''}`}
+                role="tabpanel"
+                aria-hidden={index !== currentTestimonial}
               >
                 <div className="testimonial-header">
                   <div className="client-info">
@@ -120,11 +130,11 @@ function Testimonials() {
                     {renderStars(testimonial.rating)}
                   </div>
                 </div>
-                
+
                 <blockquote className="testimonial-text">
                   "{testimonial.text}"
                 </blockquote>
-                
+
                 <div className="project-info">
                   <span className="project-label">Proyecto:</span>
                   <span className="project-name">{testimonial.project}</span>
@@ -134,16 +144,38 @@ function Testimonials() {
           </div>
 
           <div className="testimonial-controls">
+            <button
+              className="carousel-arrow prev"
+              onClick={handlePrevClick}
+              aria-label="Testimonio anterior"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+
             <div className="testimonial-dots">
               {testimonialsData.map((_, index) => (
                 <button
                   key={index}
                   className={`dot ${index === currentTestimonial ? 'active' : ''}`}
                   onClick={() => handleDotClick(index)}
-                  aria-label={`Ver testimonio ${index + 1}`}
+                  aria-label={`Ver testimonio ${index + 1} de ${testimonialsData.length}`}
+                  role="tab"
+                  aria-selected={index === currentTestimonial}
                 />
               ))}
             </div>
+
+            <button
+              className="carousel-arrow next"
+              onClick={handleNextClick}
+              aria-label="Siguiente testimonio"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
           </div>
         </div>
 

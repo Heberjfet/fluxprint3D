@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  fluxprint:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fluxprint-web
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fluxprint.rule=Host(`fluxprint.cloudjfet.site`)"
+      - "traefik.http.routers.fluxprint.tls=true"
+      - "traefik.http.services.fluxprint.loadbalancer.server.port=80"

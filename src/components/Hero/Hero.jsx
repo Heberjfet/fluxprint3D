@@ -1,18 +1,20 @@
-import { useRef, useEffect, useState, Suspense, lazy } from "react";
+import { useRef, useEffect, useState, Suspense, lazy, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
   OrbitControls,
   PerspectiveCamera,
   Environment,
 } from "@react-three/drei";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import "./Hero.css";
 
 // Lazy load the 3D printer component
 const Printer3DLazy = lazy(() => import("./Printer3DLazy"));
 
-// Simplified 3D printer for faster loading
+// Simplified 3D printer for faster loading with better visuals
 function SimplePrinter3D() {
   const meshRef = useRef();
+  const glowRef = useRef();
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -20,19 +22,40 @@ function SimplePrinter3D() {
       meshRef.current.position.y =
         Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
     }
+    if (glowRef.current) {
+      glowRef.current.intensity = 0.5 + Math.sin(state.clock.elapsedTime * 2) * 0.3;
+    }
   });
 
   return (
     <group ref={meshRef}>
-      {/* Simplified version for fallback */}
-      <mesh position={[0, -1, 0]}>
-        <boxGeometry args={[3, 0.3, 3]} />
-        <meshStandardMaterial color="#1a1a1a" />
+      {/* Base platform */}
+      <mesh position={[0, -1.2, 0]}>
+        <boxGeometry args={[4, 0.4, 4]} />
+        <meshStandardMaterial color="#1a1a1a" metalness={0.8} roughness={0.2} />
       </mesh>
-      <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#00d4ff" />
+      {/* Main body */}
+      <mesh position={[0, -0.5, 0]}>
+        <boxGeometry args={[1.5, 1, 1.5]} />
+        <meshStandardMaterial color="#2a2a2a" metalness={0.6} roughness={0.3} />
       </mesh>
+      {/* Glowing core */}
+      <mesh position={[0, 0.3, 0]}>
+        <boxGeometry args={[0.8, 0.8, 0.8]} />
+        <meshStandardMaterial
+          color="#00d4ff"
+          emissive="#00d4ff"
+          emissiveIntensity={1}
+        />
+      </mesh>
+      {/* Glowing point light for bloom effect */}
+      <pointLight
+        ref={glowRef}
+        position={[0, 0.3, 0]}
+        color="#00d4ff"
+        intensity={0.5}
+        distance={5}
+      />
     </group>
   );
 }
@@ -50,12 +73,17 @@ function CanvasLoader() {
 }
 function Hero() {
   const [scrollY, setScrollY] = useState(0);
+  const lastScrollRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      const now = Date.now();
+      if (now - lastScrollRef.current >= 16) {
+        lastScrollRef.current = now;
+        setScrollY(window.scrollY);
+      }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -103,6 +131,15 @@ function Hero() {
           </Suspense>
 
           <Environment preset="city" />
+
+          <EffectComposer>
+            <Bloom
+              luminanceThreshold={0.2}
+              luminanceSmoothing={0.9}
+              intensity={0.8}
+              radius={0.8}
+            />
+          </EffectComposer>
         </Canvas>
       </div>
 

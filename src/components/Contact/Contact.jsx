@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import './Contact.css'
 
 function Contact() {
   const [parallaxY, setParallaxY] = useState(0)
+  const lastScrollRef = useRef(0)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,42 +15,43 @@ function Contact() {
 
   const [formErrors, setFormErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState('') // 'success', 'error', or ''
+  const [submitStatus, setSubmitStatus] = useState('')
+  const [focusedField, setFocusedField] = useState(null)
 
   useEffect(() => {
     const handleScroll = () => {
-      const section = document.querySelector('.contact')
-      if (!section) return
-
-      const rect = section.getBoundingClientRect()
-      const offset = (rect.top * 0.08)
-      setParallaxY(offset)
+      const now = Date.now()
+      if (now - lastScrollRef.current >= 16) {
+        lastScrollRef.current = now
+        const section = document.querySelector('.contact')
+        if (!section) return
+        const rect = section.getBoundingClientRect()
+        const offset = (rect.top * 0.08)
+        setParallaxY(offset)
+      }
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-    
-    // Clear error when user starts typing
+
     if (formErrors[name]) {
       setFormErrors(prev => ({ ...prev, [name]: '' }))
     }
-  }
+  }, [formErrors])
 
-  const handleFileChange = (e) => {
+  const handleFileChange = useCallback((e) => {
     const file = e.target.files[0]
     if (file) {
-      // Validate file size (max 10MB)
       if (file.size > 10 * 1024 * 1024) {
         setFormErrors(prev => ({ ...prev, file: 'El archivo no puede ser mayor a 10MB' }))
         return
       }
-      // Validate file type
       const allowedTypes = ['.stl', '.obj', '.3mf', '.ply', '.x3d']
       const fileExtension = '.' + file.name.split('.').pop().toLowerCase()
       if (!allowedTypes.includes(fileExtension)) {
@@ -61,7 +63,7 @@ function Contact() {
     if (formErrors.file) {
       setFormErrors(prev => ({ ...prev, file: '' }))
     }
-  }
+  }, [formErrors])
 
   const validateForm = () => {
     const errors = {}
@@ -259,7 +261,7 @@ function Contact() {
               </div>
             )}
             
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form className="contact-form" onSubmit={handleSubmit} aria-label="Formulario de contacto">
               <div className="form-group">
                 <label htmlFor="name">Nombre completo *</label>
                 <input
@@ -268,13 +270,17 @@ function Contact() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
+                  onFocus={() => setFocusedField('name')}
+                  onBlur={() => setFocusedField(null)}
                   required
+                  aria-required="true"
+                  aria-describedby={formErrors.name ? 'name-error' : undefined}
                   placeholder="Tu nombre"
                   className={formErrors.name ? 'error' : ''}
                 />
-                {formErrors.name && <span className="error-text">{formErrors.name}</span>}
+                {formErrors.name && <span id="name-error" className="error-text" role="alert">{formErrors.name}</span>}
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="email">Email *</label>
                 <input
@@ -283,13 +289,17 @@ function Contact() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
+                  onFocus={() => setFocusedField('email')}
+                  onBlur={() => setFocusedField(null)}
                   required
+                  aria-required="true"
+                  aria-describedby={formErrors.email ? 'email-error' : undefined}
                   placeholder="tu@email.com"
                   className={formErrors.email ? 'error' : ''}
                 />
-                {formErrors.email && <span className="error-text">{formErrors.email}</span>}
+                {formErrors.email && <span id="email-error" className="error-text" role="alert">{formErrors.email}</span>}
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="phone">Teléfono</label>
                 <input
@@ -298,12 +308,15 @@ function Contact() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
+                  onFocus={() => setFocusedField('phone')}
+                  onBlur={() => setFocusedField(null)}
+                  aria-describedby={formErrors.phone ? 'phone-error' : undefined}
                   placeholder="+52 (55) 1234-5678"
                   className={formErrors.phone ? 'error' : ''}
                 />
-                {formErrors.phone && <span className="error-text">{formErrors.phone}</span>}
+                {formErrors.phone && <span id="phone-error" className="error-text" role="alert">{formErrors.phone}</span>}
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="service">Servicio de interés *</label>
                 <select
@@ -312,6 +325,8 @@ function Contact() {
                   value={formData.service}
                   onChange={handleChange}
                   required
+                  aria-required="true"
+                  aria-describedby={formErrors.service ? 'service-error' : undefined}
                   className={formErrors.service ? 'error' : ''}
                 >
                   <option value="">Selecciona un servicio</option>
@@ -322,9 +337,9 @@ function Contact() {
                   <option value="serie">Producción en Serie</option>
                   <option value="personalizado">Proyecto Personalizado</option>
                 </select>
-                {formErrors.service && <span className="error-text">{formErrors.service}</span>}
+                {formErrors.service && <span id="service-error" className="error-text" role="alert">{formErrors.service}</span>}
               </div>
-              
+
               <div className="form-group full-width">
                 <label htmlFor="message">Descripción del proyecto *</label>
                 <textarea
@@ -332,15 +347,22 @@ function Contact() {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
+                  onFocus={() => setFocusedField('message')}
+                  onBlur={() => setFocusedField(null)}
                   required
+                  aria-required="true"
+                  aria-describedby={formErrors.message ? 'message-error' : 'message-hint'}
                   rows="4"
                   placeholder="Describe tu proyecto: dimensiones, materiales preferidos, cantidad, plazo de entrega, etc."
                   className={formErrors.message ? 'error' : ''}
                 ></textarea>
-                {formErrors.message && <span className="error-text">{formErrors.message}</span>}
-                <small className="form-help">Mínimo 10 caracteres</small>
+                {formErrors.message ? (
+                  <span id="message-error" className="error-text" role="alert">{formErrors.message}</span>
+                ) : (
+                  <small id="message-hint" className="form-help">Mínimo 10 caracteres</small>
+                )}
               </div>
-              
+
               <div className="form-group full-width">
                 <label htmlFor="file" className="file-label">
                   <span className="file-icon">📎</span>
@@ -353,25 +375,27 @@ function Contact() {
                   name="file"
                   onChange={handleFileChange}
                   accept=".stl,.obj,.3mf,.ply,.x3d"
+                  aria-describedby={formErrors.file ? 'file-error' : undefined}
                   className="file-input"
                 />
-                {formErrors.file && <span className="error-text">{formErrors.file}</span>}
+                {formErrors.file && <span id="file-error" className="error-text" role="alert">{formErrors.file}</span>}
               </div>
-              
-              <button 
-                type="submit" 
+
+              <button
+                type="submit"
                 className={`submit-btn ${isSubmitting ? 'submitting' : ''}`}
                 disabled={isSubmitting}
+                aria-busy={isSubmitting}
               >
                 {isSubmitting ? (
                   <>
-                    <span className="spinner"></span>
+                    <span className="spinner" aria-hidden="true"></span>
                     Enviando...
                   </>
                 ) : (
                   <>
                     Enviar cotización
-                    <span className="btn-arrow">→</span>
+                    <span className="btn-arrow" aria-hidden="true">→</span>
                   </>
                 )}
               </button>

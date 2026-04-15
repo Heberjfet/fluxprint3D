@@ -12,6 +12,7 @@ import WhyUs from './components/WhyUs/WhyUs'
 import Testimonials from './components/Testimonials/Testimonials'
 import Contact from './components/Contact/Contact'
 import Footer from './components/Footer/Footer'
+import BackToTop from './components/BackToTop/BackToTop'
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Testimonials />
         <Contact />
         <Footer />
+        <BackToTop />
       </div>
     </>
   )
